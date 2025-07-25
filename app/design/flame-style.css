@@ -1,0 +1,120 @@
+:root {
+  --flame-red: #ff3a2f;
+  --ember-orange: #ff7f41;
+  --ash-gray: #228b22;
+  --smoke-white: #f5f5f5;
+  --healing-blue: #41a6ff;
+  --earth-brown: #8b4513;
+  --forest-green: #228b22;
+  --dark-bg:rgb(110, 4, 4);
+  --card-bg: #03421d;
+}
+
+/* Set default text color to white */
+body {
+  color: var(--smoke-white);
+}
+
+.flame-text {
+  background: linear-gradient(135deg, var(--flame-red) 0%, var(--ember-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: white;
+  background-clip: text;
+  text-fill-color: multi-color;
+}
+
+.flame-button {
+  background: linear-gradient(135deg, var(--flame-red) 0%, var(--ember-orange) 100%);
+  color: var(--smoke-yellow);
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 58, 47, 0.3);
+}
+
+.flame-button:hover {
+  box-shadow: 0 0 20px rgba(255, 58, 47, 0.6);
+  transform: translateY(-2px);
+}
+
+.ember-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 58, 47, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 58, 47, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 58, 47, 0);
+  }
+}
+
+.flame-card {
+  background-color: var(--card-bg);
+  border: 1px solid rgba(255, 58, 47, 0.2);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: var(--smoke-white);
+}
+
+.flame-input {
+  background-color: var(--ash-gray);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: var(--smoke-white);
+}
+
+.flame-input:focus {
+  border-color: var(--flame-red);
+  box-shadow: 0 0 0 2px rgba(255, 58, 47, 0.2);
+  outline: none;
+}
+
+/* Override any shadcn UI components to ensure white text */
+.text-black,
+[class*="text-gray-"] {
+  color: var(--smoke-white) !important;
+}
+
+/* Ensure form elements have proper contrast */
+input,
+textarea,
+select {
+  color: var(--smoke-white);
+  background-color: var(--ash-gray);
+}
+
+/* For success/error messages that might have dark text */
+.bg-green-100.text-green-800 {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80 !important;
+}
+
+.bg-red-100.text-red-800 {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171 !important;
+}
+
+/* Ensure links are visible */
+a {
+  color: var(--healing-blue);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* For any elements that might be on white backgrounds */
+.bg-white,
+.bg-gray-100 {
+  background-color: var(--card-bg);
+  color: var(--smoke-white);
+}

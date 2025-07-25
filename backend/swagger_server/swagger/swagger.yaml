@@ -1,0 +1,2565 @@
+openapi: 3.0.0
+info:
+  title: "MoStar AI API - [Overlord Version]"
+  description: |
+    This is the full consolidated API specification for MoStar AI. It includes:
+    - Core persona and assistant endpoints
+    - Federated learning stack
+    - Neuro-symbolic reasoning
+    - Satellite observation
+    - Cybersecurity intelligence
+    - Bioinformatics support
+    - Geospatial alert broadcasting
+    - Oracle-based predictive insight
+    - Dashboard UI scaffolds
+    - Enhanced security and compliance features
+    - Memory and personalization systems
+    - Real-time integrations and webhooks
+
+    ---
+    ## IMPLEMENTED FEATURES
+    - Satellite and geospatial alert systems
+    - Bioinformatics visualization
+    - Federated node registration and training submission
+    - Symbolic hypothesis validation
+    - AI assistant interactions via text and image
+    - Feedback loop via roadmap submissions
+    - Pilot testing for Lassa fever interventions
+    - Text generation and image synthesis/completion endpoints
+    - Multi-modal AI capabilities (text, image, audio)
+    - Advanced security and surveillance systems
+    - Integration with major mapping and logistics providers
+
+    ---
+    ## ENHANCED CAPABILITIES
+    🔐 Security & Compliance: Audit trails, session management, fine-grained permissions
+    🧠 Memory & Personalization: Persistent context, persona chaining, Genesis Memory Ledger
+    🛰️ Geospatial Intelligence: Real-time satellite data, predictive analytics
+    📊 Federated Learning: Distributed training, blockchain-style ledgering
+    🧬 Bioinformatics: Gene analysis, protein structure, epidemic forecasting
+    ⚙️ Symbolic Logic: Theorem validation, multi-hop reasoning chains
+    🔄 Real-Time UI: Dynamic dashboards, live feedback loops
+  version: "1.1"
+servers:
+- url: https://api.mostar.ai
+  description: Primary MoStar AI API Server
+- url: https://api.nasa.gov/
+  description: NASA Earth Data API Integration
+security:
+- ApiKeyAuth: []
+- OAuth2:
+  - read
+  - write
+  - admin
+tags:
+- name: Core AI
+  description: Primary AI assistant and chat completion endpoints
+- name: Persona Management
+  description: Manage AI persona configurations and behaviors
+- name: Memory Management
+  description: Handle persistent memory and context storage
+- name: Federated Learning
+  description: Distributed learning and model aggregation
+- name: Symbolic Reasoning
+  description: Logic validation and symbolic AI capabilities
+- name: Geospatial
+  description: Satellite imagery and geospatial alert systems
+- name: Bioinformatics
+  description: "Genomics, protein analysis, and epidemic modeling"
+- name: Oracle & Predictions
+  description: Predictive analytics and insight generation
+- name: Security
+  description: Security auditing and compliance features
+- name: Image AI
+  description: "Image generation, editing, and manipulation"
+- name: Audio AI
+  description: Speech transcription and translation
+- name: Embeddings
+  description: Vector embeddings for semantic search
+- name: Data Processing
+  description: "Advanced data cleaning, transformation, and analysis"
+- name: Integrations
+  description: Third-party service integrations
+- name: Dashboard
+  description: UI scaffolding and dashboard management
+- name: Function Calling
+  description: Structured function calling capabilities
+- name: Feedback
+  description: User feedback and roadmap submissions
+- name: Research
+  description: Specialized research and pilot testing endpoints
+paths:
+  /ai-assistant:
+    post:
+      tags:
+      - Core AI
+      summary: Chat with Mo AI assistant
+      operationId: ai_assistant_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/aiassistant_body"
+            examples:
+              basic_prompt:
+                summary: Basic chat prompt
+                value:
+                  prompt: How can you help me with data analysis?
+              persona_use:
+                summary: Ask with persona
+                value:
+                  prompt: What's the best time to deploy sensor drones?
+                  persona_id: overlord_assistant
+        required: true
+      responses:
+        "200":
+          description: Mo's response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssistantResponse"
+      x-openapi-router-controller: swagger_server.controllers.core_ai_controller
+  /chat/completions:
+    post:
+      tags:
+      - Core AI
+      summary: Generate text completions based on provided messages and images
+      operationId: create_chat_completion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/chat_completions_body"
+            examples:
+              poem_request:
+                summary: Creative prompt
+                value:
+                  model: gpt-4o
+                  messages:
+                  - role: user
+                    content: Write a poem about AI and the future.
+                  max_tokens: 1000
+              json_response:
+                summary: Structured data output
+                value:
+                  model: gpt-4o-mini
+                  messages:
+                  - role: user
+                    content: Give a JSON summary of this article
+                  response_format:
+                    type: json_object
+        required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-openapi-router-controller: swagger_server.controllers.core_ai_controller
+  /persona/{id}:
+    get:
+      tags:
+      - Persona Management
+      summary: Retrieve persona configuration
+      operationId: persona_id_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "[\"Jarvis\",\"MoStar\"]"
+      responses:
+        "200":
+          description: Persona data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonaConfig"
+      x-openapi-router-controller: swagger_server.controllers.persona_management_controller
+    put:
+      tags:
+      - Persona Management
+      summary: Update persona configuration
+      operationId: persona_id_put
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonaConfig"
+        required: true
+      responses:
+        "200":
+          description: Persona updated successfully
+      x-openapi-router-controller: swagger_server.controllers.persona_management_controller
+  /memory/inspect:
+    get:
+      tags:
+      - Memory Management
+      summary: Inspect current memory state
+      operationId: memory_inspect_get
+      parameters:
+      - name: user_id
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "[\"user-457\",\"admin-99\"]"
+      responses:
+        "200":
+          description: Memory state retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemoryState"
+      x-openapi-router-controller: swagger_server.controllers.memory_management_controller
+  /memory/commit:
+    post:
+      tags:
+      - Memory Management
+      summary: Commit new memory entry
+      operationId: memory_commit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemoryEntry"
+        required: true
+      responses:
+        "201":
+          description: Memory committed successfully
+      x-openapi-router-controller: swagger_server.controllers.memory_management_controller
+  /federated-node/register:
+    post:
+      tags:
+      - Federated Learning
+      summary: Register a federated client node
+      operationId: federated_node_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/federatednode_register_body"
+            examples:
+              vision_node:
+                summary: Vision processing node
+                value:
+                  node_id: node_001
+                  model_type: transformer
+                  capabilities:
+                  - vision
+                  - object-detection
+              nlp_node:
+                summary: Language model client
+                value:
+                  node_id: node_002
+                  model_type: lstm
+                  capabilities:
+                  - text-generation
+                  - classification
+        required: true
+      responses:
+        "201":
+          description: Node registered successfully
+      x-openapi-router-controller: swagger_server.controllers.federated_learning_controller
+  /federated-training/submit:
+    post:
+      tags:
+      - Federated Learning
+      summary: Submit training weights from a federated node
+      operationId: federated_training_submit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/federatedtraining_submit_body"
+        required: true
+      responses:
+        "200":
+          description: Weights received and processed
+      x-openapi-router-controller: swagger_server.controllers.federated_learning_controller
+  /federated-training/global-model:
+    get:
+      tags:
+      - Federated Learning
+      summary: Retrieve aggregated model weights
+      operationId: federated_training_global_model_get
+      responses:
+        "200":
+          description: Current global model
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GlobalModel"
+      x-openapi-router-controller: swagger_server.controllers.federated_learning_controller
+  /federation/nodes/heartbeat:
+    get:
+      tags:
+      - Federated Learning
+      summary: Monitor federated node health
+      operationId: federation_nodes_heartbeat_get
+      responses:
+        "200":
+          description: Node status information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeHealthStatus"
+      x-openapi-router-controller: swagger_server.controllers.federated_learning_controller
+  /reasoning/validate-hypothesis:
+    post:
+      tags:
+      - Symbolic Reasoning
+      summary: Validate symbolic hypothesis
+      operationId: reasoning_validate_hypothesis_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HypothesisRequest"
+        required: true
+      responses:
+        "200":
+          description: Hypothesis validation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HypothesisResponse"
+      x-openapi-router-controller: swagger_server.controllers.symbolic_reasoning_controller
+  /logic/verify-proofs:
+    post:
+      tags:
+      - Symbolic Reasoning
+      summary: Verify symbolic logic proofs
+      operationId: logic_verify_proofs_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/logic_verifyproofs_body"
+        required: true
+      responses:
+        "200":
+          description: Proof verification result
+      x-openapi-router-controller: swagger_server.controllers.symbolic_reasoning_controller
+  /logic/trace/chain:
+    post:
+      tags:
+      - Symbolic Reasoning
+      summary: Trace multi-hop logic chains
+      operationId: logic_trace_chain_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/trace_chain_body"
+        required: true
+      responses:
+        "200":
+          description: Logic chain trace
+      x-openapi-router-controller: swagger_server.controllers.symbolic_reasoning_controller
+  /geo/alerts/live:
+    get:
+      tags:
+      - Geospatial
+      summary: Stream real-time geospatial alerts (WebSocket upgrade)
+      operationId: geo_alerts_live_get
+      responses:
+        "101":
+          description: Switching protocols to WebSocket
+      x-openapi-router-controller: swagger_server.controllers.geospatial_controller
+  /geo/alerts/subscribe:
+    post:
+      tags:
+      - Geospatial
+      summary: Subscribe to specific geospatial alert types
+      operationId: geo_alerts_subscribe_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/alerts_subscribe_body"
+        required: true
+      responses:
+        "201":
+          description: Subscription created
+      x-openapi-router-controller: swagger_server.controllers.geospatial_controller
+  /satellite/imagery:
+    get:
+      tags:
+      - Geospatial
+      summary: Access satellite imagery data
+      operationId: satellite_imagery_get
+      parameters:
+      - name: lat
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: lon
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: zoom
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 10
+      - name: date_range
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Satellite imagery data
+      x-openapi-router-controller: swagger_server.controllers.geospatial_controller
+  /bio/course-alignment:
+    post:
+      tags:
+      - Bioinformatics
+      summary: Align bioinformatics course content with curriculum standards
+      operationId: bio_course_alignment_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bio_coursealignment_body"
+        required: true
+      responses:
+        "200":
+          description: Curriculum alignment results
+      x-openapi-router-controller: swagger_server.controllers.bioinformatics_controller
+  /bio/software-competency-analysis:
+    post:
+      tags:
+      - Bioinformatics
+      summary: Analyze student proficiency in bioinformatics software
+      operationId: bio_software_competency_analysis_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bio_softwarecompetencyanalysis_body"
+        required: true
+      responses:
+        "200":
+          description: Competency assessment and recommendations
+      x-openapi-router-controller: swagger_server.controllers.bioinformatics_controller
+  /bio/publication-forecast:
+    post:
+      tags:
+      - Bioinformatics
+      summary: Forecast trends in bioinformatics academic publications
+      operationId: bio_publication_forecast_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bio_publicationforecast_body"
+        required: true
+      responses:
+        "200":
+          description: Forecasted publication trends
+      x-openapi-router-controller: swagger_server.controllers.bioinformatics_controller
+  /oracle/insight:
+    post:
+      tags:
+      - Oracle & Predictions
+      summary: Query oracle engine for predictions
+      operationId: oracle_insight_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/oracle_insight_body"
+            examples:
+              climate_short_term:
+                summary: Short-term climate prediction
+                value:
+                  topic: climate change impacts
+                  time_horizon: short_term
+                  confidence_level: 0.85
+              epidemic_long_term:
+                summary: Long-term epidemic foresight
+                value:
+                  topic: future viral outbreaks
+                  time_horizon: long_term
+                  confidence_level: 0.9
+        required: true
+      responses:
+        "200":
+          description: Prediction returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OracleInsight"
+      x-openapi-router-controller: swagger_server.controllers.oracle_&_predictions_controller
+  /security/logs:
+    get:
+      tags:
+      - Security
+      summary: Retrieve security audit logs
+      operationId: security_logs_get
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: end_date
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: log_level
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - info
+          - warning
+          - error
+          - critical
+      responses:
+        "200":
+          description: Audit logs retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditLogs"
+      x-openapi-router-controller: swagger_server.controllers.security_controller
+  /security/enhanced:
+    post:
+      tags:
+      - Security
+      summary: Enhance security measures
+      operationId: security_enhanced_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/security_enhanced_body"
+        required: true
+      responses:
+        "200":
+          description: Security measures enhanced
+      x-openapi-router-controller: swagger_server.controllers.security_controller
+  /session/revoke:
+    post:
+      tags:
+      - Security
+      summary: Revoke user session
+      operationId: session_revoke_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/session_revoke_body"
+        required: true
+      responses:
+        "200":
+          description: Session revoked successfully
+      x-openapi-router-controller: swagger_server.controllers.security_controller
+  /images/generations:
+    post:
+      tags:
+      - Image AI
+      summary: Generate images from text prompts
+      operationId: images_generations_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/images_generations_body"
+            examples:
+              futuristic-sunset:
+                summary: Futuristic cityscape
+                value:
+                  prompts: A futuristic cityscape at sunset
+                  "n": 2
+                  size: 1024x1024
+              rainforest-scene:
+                summary: Jungle scene
+                value:
+                  prompts: A dense jungle with mist and sunlight filtering through
+                  "n": 1
+                  size: 512x512
+        required: true
+      responses:
+        "200":
+          description: Images generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageGenerationResponse"
+      x-openapi-router-controller: swagger_server.controllers.image_ai_controller
+  /images/edits:
+    post:
+      tags:
+      - Image AI
+      summary: Edit images based on a prompt
+      operationId: images_edits_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/images_edits_body"
+            examples:
+              beach-edit:
+                summary: Add beach background
+                value:
+                  prompts: Replace background with tropical beach
+                  "n": 2
+                  size: 512x512
+              city-edit:
+                summary: Add neon city lights
+                value:
+                  prompts: Overlay neon city lights in the background
+                  "n": 1
+                  size: 1024x1024
+        required: true
+      responses:
+        "200":
+          description: Images edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageGenerationResponse"
+      x-openapi-router-controller: swagger_server.controllers.image_ai_controller
+  /images/variations:
+    post:
+      tags:
+      - Image AI
+      summary: Create variations of an existing image
+      operationId: images_variations_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/images_variations_body"
+            examples:
+              variation-1:
+                summary: Basic variation
+                value:
+                  "n": 2
+                  size: 512x512
+              variation-2:
+                summary: High resolution
+                value:
+                  "n": 1
+                  size: 1024x1024
+        required: true
+      responses:
+        "200":
+          description: Image variations created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageGenerationResponse"
+      x-openapi-router-controller: swagger_server.controllers.image_ai_controller
+  /audio/transcriptions:
+    post:
+      tags:
+      - Audio AI
+      summary: Create a transcription of an audio file
+      operationId: audio_transcriptions_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/audio_transcriptions_body"
+            examples:
+              english-audio:
+                summary: Basic transcription
+                value:
+                  model: whisper-1
+                  response_format: json
+              verbose-srt:
+                summary: Subtitle mode
+                value:
+                  model: whisper-1
+                  response_format: srt
+        required: true
+      responses:
+        "200":
+          description: Transcription created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranscriptionResponse"
+      x-openapi-router-controller: swagger_server.controllers.audio_ai_controller
+  /audio/translations:
+    post:
+      tags:
+      - Audio AI
+      summary: Create a translation of an audio file
+      operationId: audio_translations_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/audio_translations_body"
+            examples:
+              translate-1:
+                summary: English to French
+                value:
+                  model: whisper-1
+                  response_format: text
+              translate-2:
+                summary: English to Hausa
+                value:
+                  model: whisper-1
+                  response_format: verbose_json
+        required: true
+      responses:
+        "200":
+          description: Translation created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranscriptionResponse"
+      x-openapi-router-controller: swagger_server.controllers.audio_ai_controller
+  /embeddings:
+    post:
+      tags:
+      - Embeddings
+      summary: Create embeddings for a given input
+      operationId: embeddings_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/embeddings_body"
+        required: true
+      responses:
+        "200":
+          description: Embedding created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbeddingResponse"
+      x-openapi-router-controller: swagger_server.controllers.embeddings_controller
+  /data-cleaning:
+    post:
+      tags:
+      - Data Processing
+      summary: Perform data cleaning operations
+      operationId: data_cleaning_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/datacleaning_body"
+        required: true
+      responses:
+        "200":
+          description: Data cleaned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataProcessingResponse"
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /data-transformation:
+    post:
+      tags:
+      - Data Processing
+      summary: Perform data transformations
+      operationId: data_transformation_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/datatransformation_body"
+        required: true
+      responses:
+        "200":
+          description: Data transformed successfully
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /data-quality:
+    post:
+      tags:
+      - Data Processing
+      summary: Monitor and report data quality
+      operationId: data_quality_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/dataquality_body"
+        required: true
+      responses:
+        "200":
+          description: Data quality report generated
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /data-enrichment:
+    post:
+      tags:
+      - Data Processing
+      summary: Enrich data with external sources
+      operationId: data_enrichment_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/dataenrichment_body"
+        required: true
+      responses:
+        "200":
+          description: Data enriched successfully
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /ai-insights:
+    post:
+      tags:
+      - Data Processing
+      summary: Generate AI-assisted data insights
+      operationId: ai_insights_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/aiinsights_body"
+        required: true
+      responses:
+        "200":
+          description: AI insights generated successfully
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /ml-preprocessing:
+    post:
+      tags:
+      - Data Processing
+      summary: Preprocess data for machine learning
+      operationId: ml_preprocessing_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mlpreprocessing_body"
+        required: true
+      responses:
+        "200":
+          description: Data preprocessed for ML successfully
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /performance-optimization:
+    post:
+      tags:
+      - Data Processing
+      summary: Optimize performance for large datasets
+      operationId: performance_optimization_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/performanceoptimization_body"
+        required: true
+      responses:
+        "200":
+          description: Performance optimized successfully
+      x-openapi-router-controller: swagger_server.controllers.data_processing_controller
+  /integration/mapping/mapbox:
+    post:
+      tags:
+      - Integrations
+      summary: Integrate with Mapbox for mapping services
+      operationId: integration_mapping_mapbox_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MapboxIntegration"
+        required: true
+      responses:
+        "200":
+          description: Mapbox integrated successfully
+      x-openapi-router-controller: swagger_server.controllers.integrations_controller
+  /integration/mapping/openlayers:
+    post:
+      tags:
+      - Integrations
+      summary: Integrate with OpenLayers for web mapping
+      operationId: integration_mapping_openlayers_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericIntegration"
+        required: true
+      responses:
+        "200":
+          description: OpenLayers integrated successfully
+      x-openapi-router-controller: swagger_server.controllers.integrations_controller
+  /integration/supply-chain/dhl:
+    post:
+      tags:
+      - Integrations
+      summary: Integrate with DHL for logistics
+      operationId: integration_supply_chain_dhl_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericIntegration"
+        required: true
+      responses:
+        "200":
+          description: DHL integrated successfully
+      x-openapi-router-controller: swagger_server.controllers.integrations_controller
+  /integration/design/figma:
+    post:
+      tags:
+      - Integrations
+      summary: Integrate with Figma for design collaboration
+      operationId: integration_design_figma_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericIntegration"
+        required: true
+      responses:
+        "200":
+          description: Figma integrated successfully
+      x-openapi-router-controller: swagger_server.controllers.integrations_controller
+  /dashboard/client-mock:
+    get:
+      tags:
+      - Dashboard
+      summary: Return mock dashboard layout
+      operationId: dashboard_client_mock_get
+      responses:
+        "200":
+          description: Mock dashboard layout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardLayout"
+      x-openapi-router-controller: swagger_server.controllers.dashboard_controller
+  /dashboard/state:
+    get:
+      tags:
+      - Dashboard
+      summary: Get current dashboard state
+      operationId: dashboard_state_get
+      responses:
+        "200":
+          description: Dashboard state retrieved
+      x-openapi-router-controller: swagger_server.controllers.dashboard_controller
+    post:
+      tags:
+      - Dashboard
+      summary: Update dashboard state
+      operationId: dashboard_state_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/dashboard_state_body"
+        required: true
+      responses:
+        "200":
+          description: Dashboard state updated
+      x-openapi-router-controller: swagger_server.controllers.dashboard_controller
+  /functions/call:
+    post:
+      tags:
+      - Function Calling
+      summary: Generate JSON for function calls based on user input
+      operationId: functions_call_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/functions_call_body"
+        required: true
+      responses:
+        "200":
+          description: Function call response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+      x-openapi-router-controller: swagger_server.controllers.function_calling_controller
+  /roadmap-feedback:
+    post:
+      tags:
+      - Feedback
+      summary: Submit feedback on enhancement roadmap
+      operationId: roadmap_feedback_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackSubmission"
+        required: true
+      responses:
+        "200":
+          description: Feedback submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackResponse"
+      x-openapi-router-controller: swagger_server.controllers.feedback_controller
+  /pilotTesting:
+    post:
+      tags:
+      - Research
+      summary: Conduct pilot interventions in identified hotspots
+      operationId: pilot_testing_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/pilotTesting_body"
+        required: true
+      responses:
+        "200":
+          description: Pilot testing completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+      x-openapi-router-controller: swagger_server.controllers.research_controller
+components:
+  schemas:
+    AssistantResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: "[\"I can help you with data analysis, visualization, and insights\
+            \ generation.\",\"I specialize in bioinformatics workflows and research\
+            \ suggestions.\"]"
+        context_id:
+          type: string
+          description: ID of the conversational context
+        persona_used:
+          type: string
+          description: Persona identifier used in the interaction
+        timestamp:
+          type: string
+          description: ISO 8601 timestamp of the response
+          format: date-time
+      example:
+        response: "[\"I can help you with data analysis, visualization, and insights\
+          \ generation.\",\"I specialize in bioinformatics workflows and research\
+          \ suggestions.\"]"
+        context_id: context_id
+        persona_used: persona_used
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    ChatMessage:
+      required:
+      - content
+      - role
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - system
+          - user
+          - assistant
+          - function
+        content:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                  - image_url
+                text:
+                  type: string
+                image_url:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                    detail:
+                      type: string
+                      enum:
+                      - low
+                      - high
+                      - auto
+        name:
+          type: string
+        function_call:
+          $ref: "#/components/schemas/ChatMessage_function_call"
+      example:
+        role: system
+        function_call:
+          name: name
+          arguments: arguments
+        name: name
+        content: ""
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          enum:
+          - chat.completion
+        created:
+          type: integer
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatCompletionResponse_choices"
+        usage:
+          $ref: "#/components/schemas/ChatCompletionResponse_usage"
+      example:
+        created: 0
+        usage:
+          completion_tokens: 5
+          prompt_tokens: 1
+          total_tokens: 5
+        model: model
+        id: id
+        choices:
+        - finish_reason: stop
+          index: 6
+          message:
+            role: system
+            function_call:
+              name: name
+              arguments: arguments
+            name: name
+            content: ""
+        - finish_reason: stop
+          index: 6
+          message:
+            role: system
+            function_call:
+              name: name
+              arguments: arguments
+            name: name
+            content: ""
+        object: chat.completion
+    PersonaConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        instructions:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+        memory_scope:
+          type: string
+          enum:
+          - session
+          - persistent
+          - shared
+        security_level:
+          type: string
+          enum:
+          - public
+          - private
+          - restricted
+      example:
+        memory_scope: session
+        instructions: instructions
+        capabilities:
+        - capabilities
+        - capabilities
+        name: name
+        description: description
+        id: id
+        security_level: public
+    MemoryState:
+      type: object
+      properties:
+        user_id:
+          type: string
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemoryEntry"
+        total_size:
+          type: integer
+        last_updated:
+          type: string
+          format: date-time
+      example:
+        entries:
+        - user_id: user_id
+          importance: 0.08008281904610115
+          id: id
+          type: conversation
+          content: content
+          timestamp: 2000-01-23T04:56:07.000+00:00
+          tags:
+          - tags
+          - tags
+        - user_id: user_id
+          importance: 0.08008281904610115
+          id: id
+          type: conversation
+          content: content
+          timestamp: 2000-01-23T04:56:07.000+00:00
+          tags:
+          - tags
+          - tags
+        last_updated: 2000-01-23T04:56:07.000+00:00
+        user_id: user_id
+        total_size: 6
+    MemoryEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum:
+          - conversation
+          - preference
+          - fact
+          - context
+        importance:
+          maximum: 1
+          minimum: 0
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+      example:
+        user_id: user_id
+        importance: 0.08008281904610115
+        id: id
+        type: conversation
+        content: content
+        timestamp: 2000-01-23T04:56:07.000+00:00
+        tags:
+        - tags
+        - tags
+    GlobalModel:
+      type: object
+      properties:
+        version:
+          type: string
+        weights:
+          type: array
+          items:
+            type: number
+        metadata:
+          $ref: "#/components/schemas/GlobalModel_metadata"
+      example:
+        metadata:
+          performance_metrics: {}
+          participating_nodes:
+          - participating_nodes
+          - participating_nodes
+          training_rounds: 6
+        weights:
+        - 0.8008281904610115
+        - 0.8008281904610115
+        version: version
+    NodeHealthStatus:
+      type: object
+      properties:
+        active_nodes:
+          type: integer
+        total_registered:
+          type: integer
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NodeHealthStatus_nodes"
+      example:
+        active_nodes: 0
+        nodes:
+        - capabilities:
+          - capabilities
+          - capabilities
+          last_heartbeat: 2000-01-23T04:56:07.000+00:00
+          node_id: node_id
+          status: active
+        - capabilities:
+          - capabilities
+          - capabilities
+          last_heartbeat: 2000-01-23T04:56:07.000+00:00
+          node_id: node_id
+          status: active
+        total_registered: 6
+    HypothesisRequest:
+      type: object
+      properties:
+        hypothesis:
+          type: string
+        domain:
+          type: string
+        evidence:
+          type: array
+          items:
+            type: string
+        confidence_threshold:
+          maximum: 1
+          minimum: 0
+          type: number
+    HypothesisResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        confidence:
+          type: number
+        reasoning_chain:
+          type: array
+          items:
+            type: string
+        supporting_evidence:
+          type: array
+          items:
+            type: string
+        contradicting_evidence:
+          type: array
+          items:
+            type: string
+      example:
+        valid: true
+        contradicting_evidence:
+        - contradicting_evidence
+        - contradicting_evidence
+        reasoning_chain:
+        - reasoning_chain
+        - reasoning_chain
+        supporting_evidence:
+        - supporting_evidence
+        - supporting_evidence
+        confidence: 0.8008281904610115
+    OracleInsight:
+      type: object
+      properties:
+        prediction:
+          type: string
+        confidence:
+          type: number
+        time_horizon:
+          type: string
+        factors:
+          type: array
+          items:
+            $ref: "#/components/schemas/OracleInsight_factors"
+        uncertainty_range:
+          $ref: "#/components/schemas/OracleInsight_uncertainty_range"
+      example:
+        uncertainty_range:
+          min: 1.4658129805029452
+          max: 5.962133916683182
+        time_horizon: time_horizon
+        confidence: 0.8008281904610115
+        prediction: prediction
+        factors:
+        - weight: 6.027456183070403
+          factor: factor
+        - weight: 6.027456183070403
+          factor: factor
+    AuditLogs:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuditLogs_logs"
+        total_count:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
+      example:
+        per_page: 1
+        total_count: 0
+        page: 6
+        logs:
+        - level: level
+          user_id: user_id
+          action: action
+          ip_address: ip_address
+          message: message
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - level: level
+          user_id: user_id
+          action: action
+          ip_address: ip_address
+          message: message
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    ImageGenerationResponse:
+      type: object
+      properties:
+        created:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImageGenerationResponse_data"
+      example:
+        data:
+        - revised_prompt: revised_prompt
+          b64_json: b64_json
+          url: url
+        - revised_prompt: revised_prompt
+          b64_json: b64_json
+          url: url
+        created: 0
+    TranscriptionResponse:
+      type: object
+      properties:
+        text:
+          type: string
+        language:
+          type: string
+        duration:
+          type: number
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/TranscriptionResponse_segments"
+      example:
+        duration: 0.8008281904610115
+        language: language
+        text: text
+        segments:
+        - start: 5.962133916683182
+          temperature: 7.061401241503109
+          end: 5.637376656633329
+          tokens:
+          - 2
+          - 2
+          id: 6
+          text: text
+          seek: 1.4658129805029452
+        - start: 5.962133916683182
+          temperature: 7.061401241503109
+          end: 5.637376656633329
+          tokens:
+          - 2
+          - 2
+          id: 6
+          text: text
+          seek: 1.4658129805029452
+    EmbeddingResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+          - list
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmbeddingResponse_data"
+        model:
+          type: string
+        usage:
+          $ref: "#/components/schemas/EmbeddingResponse_usage"
+      example:
+        data:
+        - index: 6
+          embedding:
+          - 0.8008281904610115
+          - 0.8008281904610115
+          object: embedding
+        - index: 6
+          embedding:
+          - 0.8008281904610115
+          - 0.8008281904610115
+          object: embedding
+        usage:
+          prompt_tokens: 1
+          total_tokens: 5
+        model: model
+        object: list
+    DataProcessingResponse:
+      type: object
+      properties:
+        processed_data:
+          type: array
+          items:
+            type: object
+        operations_applied:
+          type: array
+          items:
+            type: string
+        quality_score:
+          maximum: 1
+          minimum: 0
+          type: number
+        statistics:
+          $ref: "#/components/schemas/DataProcessingResponse_statistics"
+      example:
+        processed_data:
+        - {}
+        - {}
+        quality_score: 0.08008281904610115
+        operations_applied:
+        - operations_applied
+        - operations_applied
+        statistics:
+          columns_processed: 1
+          rows_processed: 6
+          missing_values_handled: 5
+          outliers_detected: 5
+    MapboxIntegration:
+      type: object
+      properties:
+        api_key:
+          type: string
+        map_style:
+          type: string
+          enum:
+          - streets
+          - outdoors
+          - light
+          - dark
+          - satellite
+        features:
+          type: array
+          items:
+            type: string
+            enum:
+            - markers
+            - routing
+            - geocoding
+            - traffic
+    GenericIntegration:
+      type: object
+      properties:
+        service_name:
+          type: string
+        api_key:
+          type: string
+        configuration:
+          type: object
+        webhook_url:
+          type: string
+    DashboardLayout:
+      type: object
+      properties:
+        widgets:
+          type: array
+          items:
+            $ref: "#/components/schemas/DashboardLayout_widgets"
+        theme:
+          type: string
+          enum:
+          - light
+          - dark
+          - auto
+        auto_refresh:
+          type: boolean
+        refresh_interval:
+          type: integer
+      example:
+        auto_refresh: true
+        refresh_interval: 5
+        theme: light
+        widgets:
+        - id: id
+          position:
+            x: 0
+            width: 1
+            "y": 6
+            height: 5
+          type: chart
+          config: {}
+        - id: id
+          position:
+            x: 0
+            width: 1
+            "y": 6
+            height: 5
+          type: chart
+          config: {}
+    FunctionDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        parameters:
+          $ref: "#/components/schemas/FunctionDefinition_parameters"
+    FeedbackSubmission:
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+          - bug_report
+          - feature_request
+          - improvement
+          - general
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          - critical
+        user_info:
+          $ref: "#/components/schemas/FeedbackSubmission_user_info"
+        attachments:
+          type: array
+          items:
+            type: string
+    FeedbackResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - submitted
+          - under_review
+          - in_progress
+          - completed
+          - rejected
+        acknowledgment:
+          type: string
+        estimated_timeline:
+          type: string
+        tracking_id:
+          type: string
+      example:
+        estimated_timeline: estimated_timeline
+        id: id
+        tracking_id: tracking_id
+        status: submitted
+        acknowledgment: acknowledgment
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/ErrorResponse_error"
+    aiassistant_body:
+      required:
+      - prompt
+      type: object
+      properties:
+        prompt:
+          type: string
+        context:
+          type: string
+          description: Additional context for the conversation
+        persona_id:
+          type: string
+          description: Specific persona to use for this interaction
+    chatcompletions_response_format:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - json_object
+          - text
+    chat_completions_body:
+      required:
+      - messages
+      - model
+      type: object
+      properties:
+        model:
+          type: string
+          enum:
+          - gpt-4o
+          - gpt-4o-mini
+          - gpt-4-turbo
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+        max_tokens:
+          type: integer
+        response_format:
+          $ref: "#/components/schemas/chatcompletions_response_format"
+    federatednode_register_body:
+      required:
+      - model_type
+      - node_id
+      type: object
+      properties:
+        node_id:
+          type: string
+        model_type:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+    federatedtraining_submit_body:
+      required:
+      - node_id
+      - weights
+      type: object
+      properties:
+        node_id:
+          type: string
+        weights:
+          type: array
+          items:
+            type: number
+        epoch:
+          type: integer
+        metrics:
+          type: object
+    logic_verifyproofs_body:
+      type: object
+      properties:
+        proof:
+          type: string
+        axioms:
+          type: array
+          items:
+            type: string
+        logic_system:
+          type: string
+          enum:
+          - propositional
+          - predicate
+          - modal
+    trace_chain_body:
+      type: object
+      properties:
+        premises:
+          type: array
+          items:
+            type: string
+        target_conclusion:
+          type: string
+    alerts_subscribe_body:
+      type: object
+      properties:
+        alert_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - earthquake
+            - flood
+            - wildfire
+            - storm
+            - epidemic
+        regions:
+          type: array
+          items:
+            type: string
+        webhook_url:
+          type: string
+    bio_coursealignment_body:
+      type: object
+      properties:
+        course_modules:
+          type: array
+          items:
+            type: string
+        standard_framework:
+          type: string
+          enum:
+          - iscb
+          - abf
+          - custom
+    bio_softwarecompetencyanalysis_body:
+      type: object
+      properties:
+        student_id:
+          type: string
+        tools_used:
+          type: array
+          items:
+            type: string
+        usage_metrics:
+          type: object
+    biopublicationforecast_time_range:
+      type: object
+      properties:
+        start_year:
+          type: integer
+        end_year:
+          type: integer
+    bio_publicationforecast_body:
+      type: object
+      properties:
+        subfield:
+          type: string
+          enum:
+          - genomics
+          - systems_biology
+          - proteomics
+          - structural_bioinformatics
+        citation_sources:
+          type: array
+          items:
+            type: string
+        time_range:
+          $ref: "#/components/schemas/biopublicationforecast_time_range"
+    oracle_insight_body:
+      required:
+      - topic
+      type: object
+      properties:
+        topic:
+          type: string
+        time_horizon:
+          type: string
+          enum:
+          - short_term
+          - medium_term
+          - long_term
+        confidence_level:
+          maximum: 1
+          minimum: 0
+          type: number
+    security_enhanced_body:
+      type: object
+      properties:
+        security_level:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          - maximum
+        measures:
+          type: array
+          items:
+            type: string
+    session_revoke_body:
+      type: object
+      properties:
+        session_id:
+          type: string
+        user_id:
+          type: string
+    images_generations_body:
+      required:
+      - prompts
+      type: object
+      properties:
+        prompts:
+          type: string
+        "n":
+          maximum: 10
+          minimum: 1
+          type: integer
+          default: 1
+        size:
+          type: string
+          default: 1024x1024
+          enum:
+          - 256x256
+          - 512x512
+          - 1024x1024
+          - 1792x1024
+          - 1024x1792
+        quality:
+          type: string
+          default: standard
+          enum:
+          - standard
+          - hd
+    images_edits_body:
+      required:
+      - image
+      - prompt
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        mask:
+          type: string
+          format: binary
+        prompts:
+          type: string
+        "n":
+          type: integer
+          default: 1
+        size:
+          type: string
+          enum:
+          - 256x256
+          - 512x512
+          - 1024x1024
+    images_variations_body:
+      required:
+      - image
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        "n":
+          type: integer
+          default: 1
+        size:
+          type: string
+          enum:
+          - 256x256
+          - 512x512
+          - 1024x1024
+    audio_transcriptions_body:
+      required:
+      - file
+      - model
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        model:
+          type: string
+          enum:
+          - whisper-1
+        prompt:
+          type: string
+        response_format:
+          type: string
+          default: json
+          enum:
+          - json
+          - text
+          - srt
+          - verbose_json
+          - vtt
+        temperature:
+          maximum: 1
+          minimum: 0
+          type: number
+    audio_translations_body:
+      required:
+      - file
+      - model
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        model:
+          type: string
+          enum:
+          - whisper-1
+        prompt:
+          type: string
+        response_format:
+          type: string
+          default: json
+          enum:
+          - json
+          - text
+          - srt
+          - verbose_json
+          - vtt
+    embeddings_body:
+      required:
+      - input
+      - model
+      type: object
+      properties:
+        model:
+          type: string
+        input:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        encoding_format:
+          type: string
+          default: float
+          enum:
+          - float
+          - base64
+      example:
+      - summary: Single sentence input
+        value:
+          model: text-embedding-ada-002
+          input: Generate an embedding for this sentence.
+          encoding_format: float
+      - summary: Array of sentences
+        value:
+          model: text-embedding-ada-002
+          input:
+          - The sky is blue.
+          - Mastomys Natalensis is a rodent species.
+          encoding_format: base64
+    datacleaning_body:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        imputation_strategies:
+          type: array
+          items:
+            type: string
+            enum:
+            - mean
+            - median
+            - mode
+            - forward_fill
+            - backward_fill
+        outlier_handling:
+          type: string
+          enum:
+          - z_score
+          - iqr
+          - isolation_forest
+        normalization_scaling:
+          type: string
+          enum:
+          - min_max
+          - standard
+          - robust
+    datatransformation_body:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        transformations:
+          type: array
+          items:
+            type: string
+            enum:
+            - pivot
+            - melt
+            - aggregate
+            - join
+            - filter
+    dataquality_body:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        quality_checks:
+          type: array
+          items:
+            type: string
+            enum:
+            - completeness
+            - accuracy
+            - consistency
+            - validity
+    dataenrichment_body:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        enrichment_sources:
+          type: array
+          items:
+            type: string
+    aiinsights_body:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        analysis_type:
+          type: string
+          enum:
+          - correlation
+          - trend
+          - anomaly
+          - prediction
+    mlpreprocessing_body:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        target_column:
+          type: string
+        test_size:
+          maximum: 1
+          minimum: 0
+          type: number
+          default: 0.2
+    performanceoptimization_body:
+      type: object
+      properties:
+        data_size:
+          type: integer
+        optimization_type:
+          type: string
+          enum:
+          - parallel_processing
+          - caching
+          - indexing
+    dashboard_state_body:
+      type: object
+      properties:
+        widgets:
+          type: array
+          items:
+            type: object
+        theme:
+          type: string
+          enum:
+          - light
+          - dark
+          - auto
+    functions_call_body:
+      required:
+      - messages
+      - model
+      type: object
+      properties:
+        model:
+          type: string
+          enum:
+          - gpt-4o
+          - gpt-4o-mini
+          - gpt-4-turbo
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+        functions:
+          type: array
+          items:
+            $ref: "#/components/schemas/FunctionDefinition"
+        tool_choice:
+          type: string
+          default: auto
+          enum:
+          - auto
+          - required
+          - none
+    pilotTesting_body:
+      type: object
+      properties:
+        location:
+          type: string
+        intervention_type:
+          type: string
+        parameters:
+          type: object
+    inline_response_200:
+      type: object
+      properties:
+        status:
+          type: string
+        results:
+          type: object
+      example:
+        results: {}
+        status: status
+    ChatMessage_function_call:
+      type: object
+      properties:
+        name:
+          type: string
+        arguments:
+          type: string
+      example:
+        name: name
+        arguments: arguments
+    ChatCompletionResponse_choices:
+      type: object
+      properties:
+        index:
+          type: integer
+        message:
+          $ref: "#/components/schemas/ChatMessage"
+        finish_reason:
+          type: string
+          enum:
+          - stop
+          - length
+          - function_call
+          - content_filter
+      example:
+        finish_reason: stop
+        index: 6
+        message:
+          role: system
+          function_call:
+            name: name
+            arguments: arguments
+          name: name
+          content: ""
+    ChatCompletionResponse_usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+      example:
+        completion_tokens: 5
+        prompt_tokens: 1
+        total_tokens: 5
+    GlobalModel_metadata:
+      type: object
+      properties:
+        training_rounds:
+          type: integer
+        participating_nodes:
+          type: array
+          items:
+            type: string
+        performance_metrics:
+          type: object
+      example:
+        performance_metrics: {}
+        participating_nodes:
+        - participating_nodes
+        - participating_nodes
+        training_rounds: 6
+    NodeHealthStatus_nodes:
+      type: object
+      properties:
+        node_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+          - training
+          - error
+        last_heartbeat:
+          type: string
+          format: date-time
+        capabilities:
+          type: array
+          items:
+            type: string
+      example:
+        capabilities:
+        - capabilities
+        - capabilities
+        last_heartbeat: 2000-01-23T04:56:07.000+00:00
+        node_id: node_id
+        status: active
+    OracleInsight_factors:
+      type: object
+      properties:
+        factor:
+          type: string
+        weight:
+          type: number
+      example:
+        weight: 6.027456183070403
+        factor: factor
+    OracleInsight_uncertainty_range:
+      type: object
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+      example:
+        min: 1.4658129805029452
+        max: 5.962133916683182
+    AuditLogs_logs:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+        message:
+          type: string
+        user_id:
+          type: string
+        ip_address:
+          type: string
+        action:
+          type: string
+      example:
+        level: level
+        user_id: user_id
+        action: action
+        ip_address: ip_address
+        message: message
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    ImageGenerationResponse_data:
+      type: object
+      properties:
+        url:
+          type: string
+        b64_json:
+          type: string
+        revised_prompt:
+          type: string
+      example:
+        revised_prompt: revised_prompt
+        b64_json: b64_json
+        url: url
+    TranscriptionResponse_segments:
+      type: object
+      properties:
+        id:
+          type: integer
+        seek:
+          type: number
+        start:
+          type: number
+        end:
+          type: number
+        text:
+          type: string
+        tokens:
+          type: array
+          items:
+            type: integer
+        temperature:
+          type: number
+      example:
+        start: 5.962133916683182
+        temperature: 7.061401241503109
+        end: 5.637376656633329
+        tokens:
+        - 2
+        - 2
+        id: 6
+        text: text
+        seek: 1.4658129805029452
+    EmbeddingResponse_data:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+          - embedding
+        embedding:
+          type: array
+          items:
+            type: number
+        index:
+          type: integer
+      example:
+        index: 6
+        embedding:
+        - 0.8008281904610115
+        - 0.8008281904610115
+        object: embedding
+    EmbeddingResponse_usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+      example:
+        prompt_tokens: 1
+        total_tokens: 5
+    DataProcessingResponse_statistics:
+      type: object
+      properties:
+        rows_processed:
+          type: integer
+        columns_processed:
+          type: integer
+        missing_values_handled:
+          type: integer
+        outliers_detected:
+          type: integer
+      example:
+        columns_processed: 1
+        rows_processed: 6
+        missing_values_handled: 5
+        outliers_detected: 5
+    DashboardLayout_position:
+      type: object
+      properties:
+        x:
+          type: integer
+        "y":
+          type: integer
+        width:
+          type: integer
+        height:
+          type: integer
+      example:
+        x: 0
+        width: 1
+        "y": 6
+        height: 5
+    DashboardLayout_widgets:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - chart
+          - map
+          - table
+          - metric
+          - alert
+        position:
+          $ref: "#/components/schemas/DashboardLayout_position"
+        config:
+          type: object
+      example:
+        id: id
+        position:
+          x: 0
+          width: 1
+          "y": 6
+          height: 5
+        type: chart
+        config: {}
+    FunctionDefinition_parameters:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - object
+        properties:
+          type: object
+        required:
+          type: array
+          items:
+            type: string
+    FeedbackSubmission_user_info:
+      type: object
+      properties:
+        user_id:
+          type: string
+        email:
+          type: string
+    ErrorResponse_error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        request_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-API-Key
+      in: header
+      x-apikeyInfoFunc: swagger_server.controllers.authorization_controller.check_ApiKeyAuth
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.mostar.ai/oauth/authorize
+          tokenUrl: https://api.mostar.ai/oauth/token
+          scopes:
+            read: Read access to resources
+            write: Write access to resources
+            admin: Administrative access
+      x-tokenInfoFunc: swagger_server.controllers.authorization_controller.check_OAuth2
+      x-scopeValidateFunc: swagger_server.controllers.authorization_controller.validate_scope_OAuth2

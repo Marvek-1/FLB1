@@ -1,0 +1,28 @@
+{
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "pip install -r requirements.txt"
+    }
+  ],
+  "tasks": {
+    "start-ubuntu-testnet": {
+      "name": "🔥 Start FlameBorn Ubuntu Testnet",
+      "command": "uvicorn neon_main:app --host 0.0.0.0 --port 8000 --reload",
+      "runAtStart": true
+    },
+    "create-tables": {
+      "name": "🗄️ Create Ubuntu Database Tables",
+      "command": "python -c 'from neon_models import create_tables; create_tables()'"
+    },
+    "seed-data": {
+      "name": "🌱 Seed Ubuntu Test Data",
+      "command": "curl -X POST http://localhost:8000/dev/seed-ubuntu-data"
+    },
+    "test-api": {
+      "name": "🧪 Test Ubuntu API",
+      "command": "python test_neon_api.py"
+    }
+  },
+  "ports": [8000]
+}

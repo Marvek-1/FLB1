@@ -1,0 +1,27 @@
+{
+  "name": "flameborn-testnet-backend",
+  "version": "0.0.1-alpha",
+  "description": "FlameBorn Healthcare Tokenization Testnet - Ubuntu Philosophy: I am because we are",
+  "main": "main.py",
+  "scripts": {
+    "start": "uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
+    "test": "python test_api.py",
+    "seed": "python -c \"import requests; print(requests.post('http://localhost:8000/dev/seed-data').json())\"",
+    "build": "docker build -t flameborn-testnet:latest .",
+    "deploy": "./deploy.sh"
+  },
+  "keywords": ["blockchain", "healthcare", "ubuntu", "tokenization", "africa", "fastapi", "testnet"],
+  "author": "FlameBorn Ubuntu Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flameborn/testnet-backend"
+  },
+  "bugs": {
+    "url": "https://github.com/flameborn/testnet-backend/issues"
+  },
+  "homepage": "https://flameborn.ubuntu",
+  "engines": {
+    "python": ">=3.11"
+  }
+}
